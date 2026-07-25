@@ -1,15 +1,8 @@
-from fastapi import Request
-from fastapi.templating import Jinja2Templates
-from backend.handlers.pages_operations import handler
-
-templates = Jinja2Templates(directory="templates")
-
-
-def _make_handler(template_name: str):
+def _make_handler(template_name: str, request: Request):
     stats = handler(request=Request)
     return templates.TemplateResponse(
         name=template_name,
-        request=stats.request,
+        request=request,
         context={
             "user": stats.user,
             "confidence": stats.con,
