@@ -197,4 +197,45 @@ async def handler(request: Request):
         con = default_confidence
         risk_score = float(stats.get("score", 0.0))
         
-    return handler
+    class StatsResult:
+        def __init__(self, **entries):
+            self.__dict__.update(entries)
+
+    return StatsResult(
+        user=user,
+        con=con,
+        risk_score=risk_score,
+        connections=connections,
+        conn_change=conn_change,
+        flow_duration=flow_duration,
+        duration_change=duration_change,
+        byte_count=byte_count,
+        byte_change=byte_change,
+        inbound_bytes=inbound_bytes,
+        inbound_change=inbound_change,
+        outbound_bytes=outbound_bytes,
+        outbound_change=outbound_change,
+        dropped_packets=dropped_packets,
+        dropped_change=dropped_change,
+        active_iocs=active_iocs,
+        iocs_change=iocs_change,
+        malicious_blocked=malicious_blocked,
+        malicious_change=blocked_change,
+        targeted_attacks=targeted_attacks,
+        targeted_change=targeted_change,
+        dest_port_div=dest_port_div,
+        dest_port_diversity=dest_port_diversity,
+        dest_port_diversity_change=port_div_change,
+        packet_rate=packet_rate,
+        packet_rate_change=packet_rate_change,
+        syn_rate=syn_rate,
+        syn_rate_change=syn_rate_change,
+        ack_rate=ack_rate,
+        ack_rate_change=ack_rate_change,
+        syn_packet_count=syn_packet_count,
+        syn_count_change=syn_count_change,
+        is_anomaly=is_anomaly,
+        message=message,
+        recent_flows=recent_flows,
+        model=model_key,
+    )
