@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard | Predictive IDS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/Dashboard/dashboard.css') }}">
+</head>
+<body>
+
+    <aside>
+        <div class="logo">
+            <div class="logo-dot"></div>
+            Sentinel IDS
+        </div>
+        <nav>
+            <a href="#" class="nav-link active">Overview</a>
+            <a href="{{ url_for('network_traffic') }}" class="nav-link">Network Traffic</a>
+            <a href="{{ url_for('threat_intelligence') }}" class="nav-link">Threat Intelligence</a>
+            <a href="{{ url_for('xai_dashboard') }}" class="nav-link">Explainable AI (XAI)</a>
+            <a href="{{ url_for('prediction_timeline') }}" class="nav-link">Prediction Timeline</a>
+            <a href="{{ url_for('research_metrics') }}" class="nav-link">Research Metrics</a>
+            <a href = "{{ url_for('ai') }}" class="nav-link">LLM Engine</a>
+            <a href="{{ url_for('dataset_explorer') }}" class="nav-link">Dataset Explorer</a>
+            <a href="{{ url_for('settings') }}" class="nav-link">Settings</a>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <h1>Real-Time Dashboard</h1>
+            <div class="live-indicator">
+                <div class="pulse"></div>
+                Live Monitoring active
+            </div>
+        </header>
+
+        <div class="alert-banner" id="predictionAlert">
+            <div class="alert-content">
+                <h3>Predictive Warning: Potential Attack</h3>
+                <p>Confidence: {{confidence}}% | Estimated onset: 45 seconds.</p>
+            </div>
+            <button class="btn-action">Deploy Countermeasures</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">Current Risk Score</div>
+                <div class="card-value risk-low" id="riskScore">
+                    {{risk_score}}<span>%</span>
+                </div>
+                <div class="card-desc">System behavior is normal ({{model}})
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Active Connections</div>
+                <div class="card-value" id="activeConn">{{connections}}</div>
+                <div class="card-desc">+4% in the last 5 minutes</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Packets / Sec</div>
+                <div class="card-value" id="packetRate">{{packet_rate}}</div>
+                <div class="card-desc">Average throughput</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">Recent Network Activity</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Source IP</th>
+                        <th>Dest Port</th>
+                        <th>Protocol</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTable">
+                    {% for flow in recent_flows %}
+                    <tr>
+                        <td>{{ flow.timestamp if flow.timestamp else 'Just now' }}</td>
+                        <td>{{ flow.source_ip if flow.source_ip else (flow.src_ip if flow.src_ip else '192.168.1.150') }}</td>
+                        <td>{{ flow.dest_port if flow.dest_port else (flow.dst_port if flow.dst_port else '443') }}</td>
+                        <td>{{ flow.protocol if flow.protocol else 'TCP' }}</td>
+                        <td><span class="badge {{ 'danger' if flow.status == 'anomaly' or flow.is_ioc else 'success' }}">{{ flow.status if flow.status else 'Normal' }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', path='/js/Dashboard/common.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/Dashboard/dashboard.js') }}"></script>
+</body>
+</html>
