@@ -6,7 +6,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 def _make_handler(template_name: str):
-    stats = handler()
+    stats = handler(request=Request)
     return templates.TemplateResponse(
         name=template_name,
         request=stats.request,
