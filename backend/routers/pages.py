@@ -22,10 +22,10 @@ _DASHBOARD_PAGES = [
 ]
 
 
-for _path, _template, _name, request in _DASHBOARD_PAGES:
+for _path, _template, _name in _DASHBOARD_PAGES:
     router.add_api_route(
         path=_path,
-        endpoint=_make_handler(_template, request),
+        endpoint=_make_handler(_template),
         methods=["GET"],
         name=_name,
     )
