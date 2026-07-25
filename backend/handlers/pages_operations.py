@@ -4,7 +4,7 @@ from backend.dataBase.models import SystemSetting
 from backend.handlers.prediction_handler import _apply_batch_results
 from backend.handlers.stats_handler import get_stats
 
-def handler(request: Request):
+async def handler(request: Request):
     db = SessionLocal()
     try:
         user = db.query(SystemSetting.org_name).first()
