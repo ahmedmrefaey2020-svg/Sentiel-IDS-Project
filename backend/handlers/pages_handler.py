@@ -1,44 +1,52 @@
-def _make_handler(template_name: str, request: Request):
-    stats = handler(request=Request)
-    return templates.TemplateResponse(
-        name=template_name,
-        request=request,
-        context={
-            "user": stats.user,
-            "confidence": stats.con,
-            "risk_score": stats.risk_score,
-            "connections": stats.connections,
-            "connections_change": stats.conn_change,
-            "flow_duration": stats.flow_duration,
-            "flow_duration_change": stats.duration_change,
-            "byte_count": stats.byte_count,
-            "byte_count_change": stats.byte_change,
-            "inbound_bytes": stats.inbound_bytes,
-            "inbound_bytes_change": stats.inbound_change,
-            "outbound_bytes": stats.outbound_bytes,
-            "outbound_bytes_change": stats.outbound_change,
-            "dropped_packets": stats.dropped_packets,
-            "dropped_packets_change": stats.dropped_change,
-            "active_iocs": stats.active_iocs,
-            "active_iocs_change": stats.iocs_change,
-            "malicious_blocked": stats.malicious_blocked,
-            "malicious_blocked_change": stats.malicious_change,
-            "targeted_attacks": stats.targeted_attacks,
-            "targeted_attacks_change": stats.targeted_change,
-            "dest_port_div": stats.dest_port_div,
-            "dest_port_diversity": stats.dest_port_diversity,
-            "dest_port_diversity_change": stats.dest_port_diversity_change,
-            "packet_rate": stats.packet_rate,
-            "packet_rate_change": stats.packet_rate_change,
-            "syn_rate": stats.syn_rate,
-            "syn_rate_change": stats.syn_rate_change,
-            "ack_rate": stats.ack_rate,
-            "ack_rate_change": stats.ack_rate_change,
-            "syn_packet_count": stats.syn_packet_count,
-            "syn_packet_count_change": stats.syn_count_change,
-            "is_anomaly": stats.is_anomaly,
-            "message": stats.message,
-            "recent_flows": stats.recent_flows,
-            "model": stats.model,
-        },
-    )
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+from backend.handlers.pages_operations import handler
+
+templates = Jinja2Templates(directory="templates")
+
+def _make_handler(template_name: str):
+    async def route_handler(request: Request):
+        stats = await handler(request=request)
+        return templates.TemplateResponse(
+            name=template_name,
+            request=request,
+            context={
+                "user": stats.user,
+                "confidence": stats.con,
+                "risk_score": stats.risk_score,
+                "connections": stats.connections,
+                "connections_change": stats.conn_change,
+                "flow_duration": stats.flow_duration,
+                "flow_duration_change": stats.duration_change,
+                "byte_count": stats.byte_count,
+                "byte_count_change": stats.byte_change,
+                "inbound_bytes": stats.inbound_bytes,
+                "inbound_bytes_change": stats.inbound_change,
+                "outbound_bytes": stats.outbound_bytes,
+                "outbound_bytes_change": stats.outbound_change,
+                "dropped_packets": stats.dropped_packets,
+                "dropped_packets_change": stats.dropped_change,
+                "active_iocs": stats.active_iocs,
+                "active_iocs_change": stats.iocs_change,
+                "malicious_blocked": stats.malicious_blocked,
+                "malicious_blocked_change": stats.malicious_change,
+                "targeted_attacks": stats.targeted_attacks,
+                "targeted_attacks_change": stats.targeted_change,
+                "dest_port_div": stats.dest_port_div,
+                "dest_port_diversity": stats.dest_port_diversity,
+                "dest_port_diversity_change": stats.dest_port_diversity_change,
+                "packet_rate": stats.packet_rate,
+                "packet_rate_change": stats.packet_rate_change,
+                "syn_rate": stats.syn_rate,
+                "syn_rate_change": stats.syn_rate_change,
+                "ack_rate": stats.ack_rate,
+                "ack_rate_change": stats.ack_rate_change,
+                "syn_packet_count": stats.syn_packet_count,
+                "syn_packet_count_change": stats.syn_count_change,
+                "is_anomaly": stats.is_anomaly,
+                "message": stats.message,
+                "recent_flows": stats.recent_flows,
+                "model": stats.model,
+            },
+        )
+    return route_handler
